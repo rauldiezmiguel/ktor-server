@@ -1,14 +1,12 @@
-# Usa una imagen base con JDK 17
-FROM openjdk:17-jdk-slim
-
-# Establece el directorio de trabajo dentro del contenedor
+# Etapa 1: construir la app con Gradle
+FROM gradle:8.1.0-jdk17 AS build
 WORKDIR /app
+COPY . .
+RUN gradle shadowJar
 
-# Copia el archivo tfg-server-all.jar generado por shadowJar al contenedor
-COPY build/libs/tfg-server-all.jar /app/tfg-server-all.jar
-
-# Expone el puerto 8080 en el que se ejecutará la aplicación
+# Etapa 2: imagen de producción más liviana
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/build/libs/tfg-server-all.jar /app/tfg-server-all.jar
 EXPOSE 8080
-
-# Comando para ejecutar la aplicación cuando se inicie el contenedor
-CMD ["java", "-jar", "/app/tfg-server-all.jar"]
+CMD ["java", "-jar", "tfg-server-all.jar"]
