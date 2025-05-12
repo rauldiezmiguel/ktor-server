@@ -1,0 +1,36 @@
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Kotlin
+*.kotlin_module
+*.kotlin_metadata
+out/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# System Files
+Thumbs.db
+
+# Generated files
+*.class
+
+# Temporary files
+*.bak
+*.swp
+*.swo
+
+# Environment files
+.env
