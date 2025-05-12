@@ -2,7 +2,7 @@
 FROM gradle:8.1.0-jdk17 AS build
 WORKDIR /app
 COPY . .
-RUN gradle shadowJar
+RUN ./gradlew shadowJar
 
 # Etapa 2: imagen de producción más liviana
 FROM openjdk:17-jdk-slim
