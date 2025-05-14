@@ -28,7 +28,8 @@ class FichaJugadorService {
         caracteristicasTacticas: String?,
         caracteristicasTecnicas: String?,
         conductaEntrenamiento: String?,
-        conductaConCompañeros: String?
+        conductaConCompañeros: String?,
+        observacionFinal: String?
     ): FichaJugadorDAO = transaction {
         FichaJugadorDAO.new {
             this.idJugador = EntityID(idJugador, Jugadores)
@@ -40,6 +41,7 @@ class FichaJugadorService {
             this.caracteristicasTecnicas = caracteristicasTecnicas
             this.conductaEntrenamiento = conductaEntrenamiento
             this.conductaConCompañeros = conductaConCompañeros
+            this.observacionFinal = observacionFinal
         }
     }
 

@@ -52,8 +52,9 @@ fun Application.fichaJugadorRoutes() {
                     val caracteristicasTecnicas = request.caracteristicasTecnicas
                     val conductaEntrenamiento = request.conductaEntrenamiento
                     val conductaConCompañeros = request.conductaConCompañeros
+                    val observacionFinal = request.observacionFinal
 
-                    val fichaJugador = fichaJugadorService.createdFichaJugador(idJugador, idEquipo, piernaHabil, caracteristicasFisicas, caracteristicasTacticas, caracteristicasTecnicas, conductaEntrenamiento, conductaConCompañeros)
+                    val fichaJugador = fichaJugadorService.createdFichaJugador(idJugador, idEquipo, piernaHabil, caracteristicasFisicas, caracteristicasTacticas, caracteristicasTecnicas, conductaEntrenamiento, conductaConCompañeros, observacionFinal)
                     call.respond(HttpStatusCode.OK, fichaJugador.toDTO())
                 }
 
