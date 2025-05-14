@@ -13,6 +13,7 @@ object AsistenciasEntrenamiento : IntIdTable("asistencia_entrenamiento") {
     val entrenamiento = reference("id_entrenamiento", Entrenamientos, onDelete = ReferenceOption.CASCADE)
     val jugador = reference("id_jugador", Jugadores,     onDelete = ReferenceOption.CASCADE)
     val asistio = bool("asistio").default(false)
+    val motivoInasistencia = text("motivo_inasistencia").nullable()
 
     init {
         uniqueIndex(entrenamiento, jugador)
@@ -25,6 +26,7 @@ class AsistenciaEntrenamientoDAO(id: EntityID<Int>) : IntEntity(id) {
     var entrenamiento by EntrenamientosDAO referencedOn AsistenciasEntrenamiento.entrenamiento
     var jugador       by JugadorDAO referencedOn AsistenciasEntrenamiento.jugador
     var asistio       by AsistenciasEntrenamiento.asistio
+    var motivoInasistencia by AsistenciasEntrenamiento.motivoInasistencia
 
     fun toDTO() = AsistenciaEntrenamientoDTO(
         id                = id.value,
@@ -32,7 +34,8 @@ class AsistenciaEntrenamientoDAO(id: EntityID<Int>) : IntEntity(id) {
         idJugador         = jugador.id.value,
         nombreJugador = jugador.nombreJugador,
         asistio           = asistio,
-        fecha = entrenamiento.fecha.toKotlinLocalDate()
+        fecha = entrenamiento.fecha.toKotlinLocalDate(),
+        motivoInasistencia = motivoInasistencia
     )
 }
 
@@ -43,5 +46,6 @@ data class AsistenciaEntrenamientoDTO(
     val idJugador: Int,
     val nombreJugador: String,
     val asistio: Boolean,
-    val fecha: LocalDate?
+    val fecha: LocalDate?,
+    val motivoInasistencia: String?
 )

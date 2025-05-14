@@ -27,7 +27,7 @@ fun Application.asistenciaEntrenosRoutes() {
                     val idEnt = call.parameters["idEntrenamiento"]!!.toInt()
                     val body: List<AsistenciaEntrenamientoDTO> = call.receive()
                     body.forEach {
-                        asistenciaEntrenamientosService.marcarAsistencia(idEnt, it.idJugador, it.asistio)
+                        asistenciaEntrenamientosService.marcarAsistencia(idEnt, it.idJugador, it.asistio, it.motivoInasistencia)
                     }
                     call.respond(HttpStatusCode.OK)
                 }

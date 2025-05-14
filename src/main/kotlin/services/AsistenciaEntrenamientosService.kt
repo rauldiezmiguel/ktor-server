@@ -41,7 +41,8 @@ class AsistenciaEntrenamientosService {
                 idJugador        = jugador.id.value,
                 nombreJugador = jugador.nombreJugador,
                 asistio          = existing?.asistio ?: false,
-                fecha = entrenamiento.fecha.toKotlinLocalDate()
+                fecha = entrenamiento.fecha.toKotlinLocalDate(),
+                motivoInasistencia = existing?.motivoInasistencia
             )
         }
     }
@@ -50,20 +51,28 @@ class AsistenciaEntrenamientosService {
     fun marcarAsistencia(
         entrenamientoId: Int,
         jugadorId: Int,
-        asistio: Boolean
+        asistio: Boolean,
+        motivoInasistencia: String? = null
     ) = transaction {
+        // Validación: Si no asistió, debe haber un motivo
+        if (!asistio && motivoInasistencia.isNullOrBlank()) {
+            throw IllegalArgumentException("Debe especificar un motivo si el jugador no asistió")
+        }
+
         val existing = AsistenciaEntrenamientoDAO.find {
             (AsistenciasEntrenamiento.entrenamiento eq entrenamientoId) and
-                    (AsistenciasEntrenamiento.jugador       eq jugadorId)
+                    (AsistenciasEntrenamiento.jugador eq jugadorId)
         }.firstOrNull()
 
         if (existing != null) {
             existing.asistio = asistio
+            existing.motivoInasistencia = if (!asistio) motivoInasistencia else null
         } else {
             AsistenciaEntrenamientoDAO.new {
                 entrenamiento = EntrenamientosDAO[entrenamientoId]
                 jugador = JugadorDAO[jugadorId]
                 this.asistio  = asistio
+                this.motivoInasistencia = if (!asistio) motivoInasistencia else null
             }
         }
     }
@@ -97,7 +106,8 @@ class AsistenciaEntrenamientosService {
                 idJugador        = jugador.id.value,
                 nombreJugador = jugador.nombreJugador,
                 asistio          = existing?.asistio ?: false,
-                fecha = entDao.fecha.toKotlinLocalDate()
+                fecha = entDao.fecha.toKotlinLocalDate(),
+                motivoInasistencia = existing?.motivoInasistencia
             )
         }
     }
