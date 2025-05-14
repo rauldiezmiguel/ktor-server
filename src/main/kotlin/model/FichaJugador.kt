@@ -20,6 +20,7 @@ object FichaJugador : IntIdTable("ficha_jugador") {
     val caracteristicasTecnicas = text("caracteristicas_tecnicas").nullable()
     val conductaEntrenamiento = text("conducta_entrenamiento").nullable()
     val conductaConCompañeros = text("conducta_con_companeros").nullable()
+    val observacionFinal = text("observacion_final").nullable()
 }
 
 class FichaJugadorDAO(id: EntityID<Int>) : IntEntity(id) {
@@ -34,6 +35,7 @@ class FichaJugadorDAO(id: EntityID<Int>) : IntEntity(id) {
     var caracteristicasTecnicas by FichaJugador.caracteristicasTecnicas
     var conductaEntrenamiento by FichaJugador.conductaEntrenamiento
     var conductaConCompañeros by FichaJugador.conductaConCompañeros
+    var observacionFinal by FichaJugador.observacionFinal
 
     val jugador by JugadorDAO referencedOn FichaJugador.idJugador
 
@@ -49,6 +51,7 @@ class FichaJugadorDAO(id: EntityID<Int>) : IntEntity(id) {
             caracteristicasTecnicas = this.caracteristicasTecnicas,
             conductaEntrenamiento = this.conductaEntrenamiento,
             conductaConCompañeros = this.conductaConCompañeros,
+            observacionFinal = this.observacionFinal,
             nombreJugador = this.jugador.nombreJugador
         )
     }
@@ -66,6 +69,7 @@ data class FichaJugadorDTO(
     val caracteristicasTecnicas: String?,
     val conductaEntrenamiento: String?,
     val conductaConCompañeros: String?,
+    val observacionFinal: String?,
     val nombreJugador: String? = null
 )
 
@@ -78,5 +82,6 @@ data class FichaJugadorRequest(
     val caracteristicasTacticas: String?,
     val caracteristicasTecnicas: String?,
     val conductaEntrenamiento: String?,
-    val conductaConCompañeros: String?
+    val conductaConCompañeros: String?,
+    val observacionFinal: String?
 )
