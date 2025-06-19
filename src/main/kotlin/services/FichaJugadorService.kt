@@ -5,19 +5,25 @@ import model.FichaJugador
 import model.FichaJugadorDAO
 import model.FichaJugadorDTO
 import model.Jugadores
+import model.TemporadaDAO
 import model.Temporadas
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
-private val idTemporadas: Int = 1
-
 class FichaJugadorService {
-    fun getFichaJugadorByIdJugador(idJugador: Int): FichaJugadorDTO = transaction {
-        FichaJugadorDAO.find { FichaJugador.idJugador eq idJugador }.first().toDTO()
+    fun getFichaJugadorByIdJugador(idJugador: Int): FichaJugadorDTO? = transaction {
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction null
+        FichaJugadorDAO.find {
+            (FichaJugador.idJugador eq idJugador) and (FichaJugador.idTemporada eq temporadaActivaId)
+        }.firstOrNull()?.toDTO() as FichaJugadorDTO
     }
 
     fun getFichasJugadoresEquipo(idEquipo: Int): List<FichaJugadorDTO> = transaction {
-        FichaJugadorDAO.find { FichaJugador.idEquipo eq idEquipo }.map { it.toDTO() }.toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+        FichaJugadorDAO.find {
+            (FichaJugador.idEquipo eq idEquipo) and (FichaJugador.idTemporada eq temporadaActivaId)
+        }.map { it.toDTO() }
     }
 
     fun createdFichaJugador(
@@ -31,10 +37,12 @@ class FichaJugadorService {
         conductaConCompañeros: String?,
         observacionFinal: String?
     ): FichaJugadorDAO = transaction {
+        val temporadaId = requireTemporadaActivaId()
+
         FichaJugadorDAO.new {
             this.idJugador = EntityID(idJugador, Jugadores)
             this.idEquipo = EntityID(idEquipo, Equipos)
-            this.idTemporada = EntityID(idTemporadas, Temporadas)
+            this.idTemporada = EntityID(temporadaId, Temporadas)
             this.piernaHabil = piernaHabil
             this.caracteristicasFisicas = caracteristicasFisicas
             this.caracteristicasTacticas = caracteristicasTacticas
@@ -50,4 +58,13 @@ class FichaJugadorService {
         fichaJugadorDelete.delete()
         true
     }
+
+    private fun getTemporadaActivaId(): Int? = transaction {
+        TemporadaDAO.find { Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id?.value
+    }
+
+    private fun requireTemporadaActivaId(): Int = getTemporadaActivaId()
+        ?: error("No hay temporada activa")
 }

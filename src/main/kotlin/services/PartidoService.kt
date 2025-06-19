@@ -5,18 +5,22 @@ import model.*
 import org.jetbrains.exposed.dao.id.EntityID
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toJavaLocalDate
+import org.jetbrains.exposed.sql.and
 
 class PartidoService {
-    private val idTemporadas: Int = 1
 
     fun getPartidosByEquipo(idEquipo: Int): List<PartidosDAO> = transaction {
-        PartidosDAO.find { Partidos.idEquipo eq idEquipo }.toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+
+        PartidosDAO.find { (Partidos.idEquipo eq idEquipo) and (Partidos.idTemporada eq temporadaActivaId) }.toList()
     }
 
     fun createPartido(idEquipo: Int, nombreRival: String, fecha: LocalDate): PartidosDAO = transaction {
+        val temporadaId = requireTemporadaActivaId()
+
         PartidosDAO.new {
             this.idEquipo = EntityID(idEquipo, Equipos)
-            this.idTemporada = EntityID(idTemporadas, Temporadas)
+            this.idTemporada = EntityID(temporadaId, Temporadas)
             this.nombreRival = nombreRival
             this.fecha = fecha.toJavaLocalDate()
         }
@@ -39,4 +43,13 @@ class PartidoService {
         partidoDelete.delete()
         true
     }
+
+    private fun getTemporadaActivaId(): Int? = transaction {
+        TemporadaDAO.find { Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id?.value
+    }
+
+    private fun requireTemporadaActivaId(): Int = getTemporadaActivaId()
+        ?: error("No hay temporada activa configurada")
 }

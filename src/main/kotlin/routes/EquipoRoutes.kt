@@ -21,7 +21,7 @@ fun Application.equipoRoutes() {
                         call.respond(HttpStatusCode.BadRequest, "ID club invalido")
                         return@get
                     }
-                    call.respond(equipoService.getEquiposByClub(idClub).map { it.toDTO() })
+                    call.respond(equipoService.getEquiposTemporadaActivaByClub(idClub).map { it.toDTO() })
                 }
 
                 get("/{id}"){

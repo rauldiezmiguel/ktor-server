@@ -11,9 +11,8 @@ import org.jetbrains.exposed.sql.and
 import java.time.LocalDate
 import java.time.YearMonth
 import kotlinx.datetime.toJavaLocalDate
+import model.TemporadaDAO
 import model.Temporadas
-
-private val idTemporadas: Int = 1
 
 class EvaluacionesService {
     fun getEvaluacionesByJugador(idJugador: Int): List<EvaluacionesDAO> = transaction {
@@ -33,6 +32,7 @@ class EvaluacionesService {
         val dayOfWeek = fecha.dayOfWeek.value // 1 = Lunes, 7 = Domingo
         val startOfWeek = fecha.minusDays((dayOfWeek - 1).toLong())
         val endOfWeek = fecha.plusDays((7 - dayOfWeek).toLong())
+        val temporadaId = requireTemporadaActivaId()
 
         // Verificar si ya existe una evaluación esa semana
         val evaluacionExistente = EvaluacionesDAO.find {
@@ -48,7 +48,7 @@ class EvaluacionesService {
         // Crear la evaluación si no hay conflicto
         EvaluacionesDAO.new {
             this.idJugador = EntityID(idJugador, Jugadores)
-            this.idTemporada = EntityID(idTemporadas, Temporadas)
+            this.idTemporada = EntityID(temporadaId, Temporadas)
             this.fecha = fecha
             this.comportamiento = comportamiento
             this.tecnica = tecnica
@@ -97,4 +97,12 @@ class EvaluacionesService {
             .sortedBy { it.año * 100 + it.mes } // orden cronológico
     }
 
+    private fun getTemporadaActivaId(): Int? = transaction {
+        TemporadaDAO.find { Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id?.value
+    }
+
+    private fun requireTemporadaActivaId(): Int = getTemporadaActivaId()
+        ?: error("No hay temporada activa")
 }

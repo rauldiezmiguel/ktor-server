@@ -32,7 +32,18 @@ class UserService {
     }
 
     fun getUserByClub(idClub: Int): List<UsuarioDAO> = transaction {
-        UsuarioDAO.find { Usuarios.idClub eq idClub }.toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+
+        // Filtramos usuarios por club y relaciones entrenador-equipo que tengan equipos en temporada activa
+        UsuarioDAO.all().filter { usuario ->
+            usuario.idClub?.value == idClub &&
+                    EntrenadorEquipoDAO.find {
+                        (EntrenadorEquipo.idEntrenador eq usuario.id.value)
+                    }.any { relacion ->
+                        val equipo = EquipoDAO.findById(relacion.idEquipo.value)
+                        equipo?.idTemporada?.value == temporadaActivaId
+                    }
+        }
     }
 
     fun createUser(nombreUsuario: String, passWrd: String, tipoUsuario: String, idClub: Int?): UsuarioDAO = transaction{
@@ -74,6 +85,7 @@ class UserService {
 
     fun getPerfilUsuario(idUsuario: Int): PerfilUsuarioDTO? = transaction {
         val usuario = UsuarioDAO.findById(idUsuario) ?: return@transaction null
+        val temporadaActivaId = getTemporadaActivaId()
 
         // Club (puede ser null)
         val clubDto = usuario.idClub?.let { clubId ->
@@ -89,9 +101,11 @@ class UserService {
 
         // 2) Por cada relación, buscamos el Equipo y extraemos su nombre
         val equiposDto = relaciones.mapNotNull { rel ->
-            EquipoDAO.findById(rel.idEquipo.value)?.let { equipo ->
+            EquipoDAO.findById(rel.idEquipo.value)?.takeIf { equipo ->
+                equipo.idTemporada.value == temporadaActivaId
+            }?.let { equipo ->
                 EquipoPerfilDTO(
-                    id          = equipo.id.value,
+                    id = equipo.id.value,
                     nombreEquipo = equipo.nombreEquipo
                 )
             }
@@ -105,5 +119,12 @@ class UserService {
             club          = clubDto,
             equipos       = equiposDto
         )
+    }
+
+    private fun getTemporadaActivaId(): Int? = transaction {
+        model.TemporadaDAO.find { model.Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id
+            ?.value
     }
 }

@@ -3,6 +3,7 @@ package services
 import model.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.and
 
 class EquipoService {
     fun getEquiposByClub(idClub: Int): List<EquipoDAO> = transaction {
@@ -36,5 +37,13 @@ class EquipoService {
 
         equipo.delete()
         true
+    }
+
+    fun getEquiposTemporadaActivaByClub(idClub: Int): List<EquipoDAO> = transaction {
+        val temporadaActiva = TemporadaDAO.find { Temporadas.activa eq true }.firstOrNull() ?: return@transaction emptyList()
+
+        EquipoDAO.find {
+            (Equipos.idClub eq idClub) and (Equipos.idTemporada eq temporadaActiva.id)
+        }.toList()
     }
 }

@@ -9,6 +9,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 object Temporadas : IntIdTable("temporadas") {
     val añoInicio = integer("año_inicio").uniqueIndex();
     val añoFin = integer("año_fin").uniqueIndex();
+    val activa = bool("activa")
 }
 
 class TemporadaDAO(id: EntityID<Int>) : IntEntity(id) {
@@ -16,12 +17,14 @@ class TemporadaDAO(id: EntityID<Int>) : IntEntity(id) {
 
     var añoInicio by Temporadas.añoInicio
     var añoFin by Temporadas.añoFin
+    var activa by Temporadas.activa
 
     fun toDTO(): TemporadaDTO {
         return TemporadaDTO(
             id = this.id.value,
             añoInicio = this.añoInicio,
-            añoFin = this.añoFin
+            añoFin = this.añoFin,
+            activa = this.activa
         )
     }
 }
@@ -30,7 +33,8 @@ class TemporadaDAO(id: EntityID<Int>) : IntEntity(id) {
 data class TemporadaDTO(
     val id: Int,
     val añoInicio: Int,
-    val añoFin: Int
+    val añoFin: Int,
+    val activa: Boolean
 )
 
 @Serializable

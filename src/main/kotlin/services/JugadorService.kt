@@ -2,27 +2,33 @@ package services
 
 import model.*
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class JugadorService {
 
-    private val idTemporadas: Int = 1
-
     fun getJugadorById(id: Int): JugadorDAO? = transaction {
-        JugadorDAO.findById(id)
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction null
+        val jugador = JugadorDAO.findById(id)
+        if (jugador?.idTemporada?.value == temporadaActivaId) jugador else null
     }
 
     fun getJugadorByEquipo(idEquipo: Int): List<JugadorDAO> = transaction {
-        JugadorDAO.find { Jugadores.idEquipo eq idEquipo }.toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+        JugadorDAO.find {
+            (Jugadores.idEquipo eq idEquipo) and (Jugadores.idTemporada eq temporadaActivaId)
+        }.toList()
     }
 
     fun createJugador(nombre: String, dorsal: Int, posicion: String?, idEquipo: Int?): JugadorDAO = transaction {
+        val temporadaId = requireTemporadaActivaId()
+
         JugadorDAO.new {
             this.nombreJugador = nombre
             this.dorsal = dorsal
             this.posicion = posicion
             this.idEquipo = EntityID( idEquipo ?: error("El ID del equipo no puede ser nulo"), Equipos)
-            this.idTemporada = EntityID(idTemporadas, Temporadas)
+            this.idTemporada = EntityID(temporadaId, Temporadas)
         }
     }
 
@@ -41,4 +47,13 @@ class JugadorService {
         jugadorDelete.delete()
         true
     }
+
+    private fun getTemporadaActivaId(): Int? = transaction {
+        TemporadaDAO.find { Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id?.value
+    }
+
+    private fun requireTemporadaActivaId(): Int = getTemporadaActivaId()
+        ?: error("No hay temporada activa")
 }
