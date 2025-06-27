@@ -49,8 +49,6 @@ fun Application.partidoRoutes() {
                         id = id,
                         resultadoNumerico = request.resultadoNumerico,
                         resultado = request.resultado,
-                        alineacion = request.alineacion,
-                        analisisGeneral = request.analisisGeneral,
                         jugadoresDestacados = request.jugadoresDestacados
                     )
 

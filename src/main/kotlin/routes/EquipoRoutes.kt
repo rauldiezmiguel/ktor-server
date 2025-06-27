@@ -35,6 +35,16 @@ fun Application.equipoRoutes() {
                     }
                 }
 
+                get("/{id}/categoria") {
+                    val id = call.parameters["id"]?.toIntOrNull()
+                    val equipo = id?.let { equipoService.getEquipoById(it) }
+                    if (equipo != null) {
+                        call.respond(HttpStatusCode.OK, equipo.categoria)
+                    }else {
+                        call.respond(HttpStatusCode.BadRequest, "ID invalido")
+                    }
+                }
+
                 post {
                     val request = call.receive<Map<String, String>>()
 

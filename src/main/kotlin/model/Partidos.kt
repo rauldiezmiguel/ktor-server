@@ -20,8 +20,6 @@ object Partidos : IntIdTable("partidos") {
     val fecha = date("fecha")
     val resultadoNumerico = text("resultado_numerico").nullable()
     val resultado = text("resultado").nullable()
-    val alineacion = text("alineacion").nullable()
-    val analisisGeneral = text("analisis_general").nullable()
     val jugadoresDestacados = text("jugadores_destacados").nullable()
 }
 
@@ -34,8 +32,6 @@ class PartidosDAO(id: EntityID<Int>) : IntEntity(id) {
     var fecha by Partidos.fecha
     var resultadoNumerico by Partidos.resultadoNumerico
     var resultado by Partidos.resultado
-    var alineacion by Partidos.alineacion
-    var analisisGeneral by Partidos.analisisGeneral
     var jugadoresDestacados by Partidos.jugadoresDestacados
 
     fun toDTO(): PartidosDTO {
@@ -47,8 +43,6 @@ class PartidosDAO(id: EntityID<Int>) : IntEntity(id) {
             fecha = this.fecha.toKotlinLocalDate(),
             resultadoNumerico = this.resultadoNumerico,
             resultado = this.resultado,
-            alineacion = this.alineacion,
-            analisisGeneral = this.analisisGeneral,
             jugadoresDestacados = this.jugadoresDestacados
         )
     }
@@ -63,8 +57,6 @@ data class PartidosDTO(
     val fecha: LocalDate,
     val resultadoNumerico: String?,
     val resultado: String?,
-    val alineacion: String?,
-    val analisisGeneral: String?,
     val jugadoresDestacados: String?
 )
 
@@ -79,7 +71,5 @@ data class CrearPartidoRequest(
 data class ActualizarPartidoRequest(
     val resultadoNumerico: String,
     val resultado: String,
-    val alineacion: String,
-    val analisisGeneral: String,
     val jugadoresDestacados: String
 )

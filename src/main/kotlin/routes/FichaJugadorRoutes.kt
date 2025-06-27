@@ -7,6 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
+import io.ktor.util.reflect.TypeInfo
 import model.FichaJugadorDTO
 import model.FichaJugadorRequest
 import services.FichaJugadorService
@@ -27,7 +28,7 @@ fun Application.fichaJugadorRoutes() {
 
                     val fichaJugador = fichaJugadorService.getFichaJugadorByIdJugador(idJugador)
 
-                    call.respond(HttpStatusCode.OK, fichaJugador)
+                    call.respond(HttpStatusCode.OK)
                 }
 
                 get("/equipo/{idEquipo}") {
