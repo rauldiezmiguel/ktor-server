@@ -9,9 +9,9 @@ import org.jetbrains.exposed.sql.Transaction
 object DatabaseFactory {
     private val config = HikariConfig().apply {
         driverClassName = "org.postgresql.Driver"
-        jdbcUrl = "jdbc:postgresql://localhost:5432/futbol_base_tfg" //System.getenv("DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/futbol_base_tfg"
-        username = "raul_admin" //System.getenv("DB_USERNAME") ?: "raul_admin"
-        password = "Rtc10DMlb!" //System.getenv("DB_PASSWORD") ?: "Rtc10DMlb!"
+        jdbcUrl = System.getenv("DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/futbol_base_tfg" //System.getenv("DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/futbol_base_tfg"
+        username = System.getenv("DB_USERNAME") ?: "raul_admin" //System.getenv("DB_USERNAME") ?: "raul_admin"
+        password = System.getenv("DB_PASSWORD") ?: "Rtc10DMlb!" //System.getenv("DB_PASSWORD") ?: "Rtc10DMlb!"
         maximumPoolSize = 10
         isAutoCommit = false
         transactionIsolation = "TRANSACTION_REPEATABLE_READ"
