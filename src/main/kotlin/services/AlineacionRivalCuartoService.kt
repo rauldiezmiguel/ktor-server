@@ -1,8 +1,10 @@
 package services
 
+import model.AlineacionEquipoCuartoDAO
 import model.AlineacionRivalCuarto
 import model.AlineacionRivalCuartoDAO
 import model.CuartosPartido
+import model.Jugadores
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -13,16 +15,25 @@ class AlineacionRivalCuartoService {
 
     fun createAlineacionRival(
         idCuarto: Int,
-        dorsalJugador: Int,
-        posX: Float,
-        posY: Float
     ): AlineacionRivalCuartoDAO = transaction {
         AlineacionRivalCuartoDAO.new {
             this.idCuarto = EntityID(idCuarto, CuartosPartido)
-            this.dorsalJugador = dorsalJugador
-            this.posX = posX
-            this.posY = posY
         }
+    }
+
+    fun addPlayerAlineacionRival(
+        id: Int,
+        dorsalJugador: Int,
+        posX: Float,
+        posY: Float
+    ): AlineacionRivalCuartoDAO? = transaction {
+        val alineacion = AlineacionRivalCuartoDAO.findById(id) ?: return@transaction null
+
+        alineacion.dorsalJugador = dorsalJugador
+        alineacion.posX = posX
+        alineacion.posY = posY
+
+        alineacion
     }
 
     fun deleteAlineacionRival(id: Int): Boolean = transaction {

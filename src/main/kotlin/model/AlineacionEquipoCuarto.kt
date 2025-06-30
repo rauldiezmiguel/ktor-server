@@ -44,6 +44,11 @@ data class AlineacionEquipoDTO(
 
 @Serializable
 data class CrearAlineacionEquipoRequest(
+    val idCuarto: Int
+)
+
+@Serializable
+data class AddPlayerAlineacionEquipoRequest(
     val idCuarto: Int,
     val idJugador: Int,
     val posX: Float,

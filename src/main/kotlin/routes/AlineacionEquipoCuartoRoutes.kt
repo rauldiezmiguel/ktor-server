@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.http.*
+import io.ktor.server.response.respond
 import model.*
 import services.AlineacionEquipoCuartoService
 
@@ -14,7 +15,7 @@ fun Application.alineacionEquipoCuartoRoutes() {
 
     routing {
         authenticate("auth-jwt") {
-            route("/alineacion/equipo") {
+            route("/alineacion-equipo") {
 
                 get("/cuarto/{idCuarto}") {
                     val idCuarto = call.parameters["idCuarto"]?.toIntOrNull()
@@ -27,14 +28,30 @@ fun Application.alineacionEquipoCuartoRoutes() {
                 post {
                     val request = call.receive<CrearAlineacionEquipoRequest>()
 
-                    val alineacion = service.createAlineacionJugador(
-                        request.idCuarto,
-                        request.idJugador,
-                        request.posX,
-                        request.posY
+                    val alineacion = service.createAlineacionEquipoCuarto(
+                        request.idCuarto
                     )
 
                     call.respond(HttpStatusCode.OK, alineacion.toDTO())
+                }
+
+                put("{id}}") {
+                    val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "ID inválido")
+
+                    val request = call.receive<AddPlayerAlineacionEquipoRequest>()
+
+                    val alineacionCuartoUpdate = service.addPlayerAlineacionJugador(
+                        id = id,
+                        idJugador = request.idJugador,
+                        posX = request.posX,
+                        posY = request.posY
+                    )
+
+                    if (alineacionCuartoUpdate != null) {
+                        call.respond(HttpStatusCode.OK, alineacionCuartoUpdate.toDTO())
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Partido no encontrado")
+                    }
                 }
 
                 delete("/{id}") {
