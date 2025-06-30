@@ -12,8 +12,8 @@ import routes.*
 //import routing.configureRouting
 
 fun main(args: Array<String>) {
-    //val port = System.getenv("PORT")?.toInt() ?: 8080
-    val port = 9090
+    val port = System.getenv("PORT")?.toInt() ?: 8080
+    //val port = 9090
     embeddedServer(Netty, host = "0.0.0.0", port = port, module = Application::module).start(wait = true)
 }
 
