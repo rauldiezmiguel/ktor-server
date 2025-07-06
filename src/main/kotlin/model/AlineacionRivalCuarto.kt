@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 
 object AlineacionRivalCuarto : IntIdTable("alineacion_rival_cuarto") {
-    val idCuarto = reference("id_cuarto", CuartosPartido, onDelete = ReferenceOption.CASCADE)
+    val idCuarto = reference("id_cuarto", CuartosRival, onDelete = ReferenceOption.CASCADE)
     val dorsalJugador = integer("dorsal_jugador")
     val posX = float("pos_x")
     val posY = float("pos_y")

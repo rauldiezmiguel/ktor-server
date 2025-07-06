@@ -33,11 +33,10 @@ class PartidosDAO(id: EntityID<Int>) : IntEntity(id) {
     var resultadoNumerico by Partidos.resultadoNumerico
     var resultado by Partidos.resultado
     var jugadoresDestacados by Partidos.jugadoresDestacados
-    val cuartosEquipo = CuartosEquipoDAO.find { CuartosEquipo.idPartido eq this@PartidosDAO.id.value }.map { it.toDTO() }
-    val cuartosRival = CuartosRivalDAO.find { CuartosRival.idPartido eq this@PartidosDAO.id.value }.map { it.toDTO() }
 
 
-    fun toDTO(): PartidosDTO {
+    fun toDTO(cuartosEquipoDTO: List<CuartosEquipoDTO> = emptyList(),
+              cuartosRivalDTO: List<CuartosRivalDTO> = emptyList()): PartidosDTO {
         return PartidosDTO(
             id = this.id.value,
             idEquipo = this.idEquipo.value,
@@ -47,8 +46,8 @@ class PartidosDAO(id: EntityID<Int>) : IntEntity(id) {
             resultadoNumerico = this.resultadoNumerico,
             resultado = this.resultado,
             jugadoresDestacados = this.jugadoresDestacados,
-            cuartosEquipo = cuartosEquipo,
-            cuartosRival = cuartosRival
+            cuartosEquipo = cuartosEquipoDTO,
+            cuartosRival = cuartosRivalDTO
         )
     }
 }

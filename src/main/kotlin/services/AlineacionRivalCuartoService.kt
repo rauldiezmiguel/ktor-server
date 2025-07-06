@@ -3,7 +3,7 @@ package services
 import model.AlineacionEquipoCuartoDAO
 import model.AlineacionRivalCuarto
 import model.AlineacionRivalCuartoDAO
-import model.CuartosPartido
+import model.CuartosRival
 import model.Jugadores
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -17,7 +17,7 @@ class AlineacionRivalCuartoService {
         idCuarto: Int,
     ): AlineacionRivalCuartoDAO = transaction {
         AlineacionRivalCuartoDAO.new {
-            this.idCuarto = EntityID(idCuarto, CuartosPartido)
+            this.idCuarto = EntityID(idCuarto, CuartosRival)
         }
     }
 

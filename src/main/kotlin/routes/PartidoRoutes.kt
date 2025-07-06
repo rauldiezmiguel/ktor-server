@@ -9,6 +9,7 @@ import io.ktor.server.routing.*
 import services.PartidoService
 import model.ActualizarPartidoRequest
 import model.CrearPartidoRequest
+import model.PartidosDAO
 
 fun Application.partidoRoutes() {
     val partidoService = PartidoService()
@@ -31,13 +32,13 @@ fun Application.partidoRoutes() {
                 post {
                     val request = call.receive<CrearPartidoRequest>()
 
-                    val partido = partidoService.crearPartidoConCuartos(
+                    val partidoDTO = partidoService.crearPartidoConCuartos(
                         idEquipo = request.idEquipo,
                         nombreRival = request.nombreRival,
                         fecha = request.fecha
                     )
 
-                    call.respond(HttpStatusCode.OK, partido.toDTO())
+                    call.respond(HttpStatusCode.OK, partidoDTO)
                 }
 
                 put("/{id}") {

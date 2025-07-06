@@ -2,7 +2,7 @@ package services
 
 import model.AlineacionEquipoCuartoDAO
 import model.AlineacionEquipoCuarto
-import model.CuartosPartido
+import model.CuartosEquipo
 import model.Jugadores
 import model.PartidosDAO
 import org.jetbrains.exposed.dao.id.EntityID
@@ -32,7 +32,7 @@ class AlineacionEquipoCuartoService {
         idCuarto: Int
     ): AlineacionEquipoCuartoDAO = transaction {
         AlineacionEquipoCuartoDAO.new {
-            this.idCuarto = EntityID(idCuarto, CuartosPartido)
+            this.idCuarto = EntityID(idCuarto, CuartosEquipo)
         }
     }
 

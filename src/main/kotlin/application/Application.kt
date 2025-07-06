@@ -42,7 +42,6 @@ fun Application.module() {
     temporadasRoutes()
     asistenciaEntrenosRoutes()
     fichaJugadorRoutes()
-    cuartosPartidoRoutes()
     alineacionRivalCuartoRoutes()
     alineacionEquipoCuartoRoutes()
 }

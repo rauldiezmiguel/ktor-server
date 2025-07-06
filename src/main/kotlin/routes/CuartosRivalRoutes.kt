@@ -39,7 +39,7 @@ fun Application.cuartosRivalRoutes() {
                     val actualizado = cuartosRivalService.updateCuarto(
                         id,
                         request.analisisRival,
-                        request.observacionesRival
+                        request.observaciones
                     )
 
                     if (actualizado != null) {
