@@ -31,7 +31,7 @@ fun Application.partidoRoutes() {
                 post {
                     val request = call.receive<CrearPartidoRequest>()
 
-                    val partido = partidoService.createPartido(
+                    val partido = partidoService.crearPartidoConCuartos(
                         idEquipo = request.idEquipo,
                         nombreRival = request.nombreRival,
                         fecha = request.fecha

@@ -33,6 +33,9 @@ class PartidosDAO(id: EntityID<Int>) : IntEntity(id) {
     var resultadoNumerico by Partidos.resultadoNumerico
     var resultado by Partidos.resultado
     var jugadoresDestacados by Partidos.jugadoresDestacados
+    val cuartosEquipo = CuartosEquipoDAO.find { CuartosEquipo.idPartido eq this@PartidosDAO.id.value }.map { it.toDTO() }
+    val cuartosRival = CuartosRivalDAO.find { CuartosRival.idPartido eq this@PartidosDAO.id.value }.map { it.toDTO() }
+
 
     fun toDTO(): PartidosDTO {
         return PartidosDTO(
@@ -43,7 +46,9 @@ class PartidosDAO(id: EntityID<Int>) : IntEntity(id) {
             fecha = this.fecha.toKotlinLocalDate(),
             resultadoNumerico = this.resultadoNumerico,
             resultado = this.resultado,
-            jugadoresDestacados = this.jugadoresDestacados
+            jugadoresDestacados = this.jugadoresDestacados,
+            cuartosEquipo = cuartosEquipo,
+            cuartosRival = cuartosRival
         )
     }
 }
@@ -57,7 +62,9 @@ data class PartidosDTO(
     val fecha: LocalDate,
     val resultadoNumerico: String?,
     val resultado: String?,
-    val jugadoresDestacados: String?
+    val jugadoresDestacados: String?,
+    val cuartosEquipo: List<CuartosEquipoDTO> = emptyList(),
+    val cuartosRival: List<CuartosRivalDTO> = emptyList()
 )
 
 @Serializable

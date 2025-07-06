@@ -24,6 +24,49 @@ class PartidoService {
         }
     }
 
+    fun crearPartidoConCuartos(idEquipo: Int, nombreRival: String, fecha: LocalDate): PartidosDTO = transaction {
+        val temporadaId = requireTemporadaActivaId()
+
+        val equipo = EquipoDAO.findById(idEquipo)
+            ?: throw IllegalArgumentException("Equipo no encontrado")
+
+        val partido = PartidosDAO.new {
+            this.idEquipo = EntityID(idEquipo, Equipos)
+            this.idTemporada = EntityID(temporadaId, Temporadas)
+            this.nombreRival = nombreRival
+            this.fecha = fecha.toJavaLocalDate()
+        }
+
+        val numeroDeCuartos = when (equipo.categoria.lowercase()) {
+            "futbol 7" -> 4
+            "futbol 11" -> 2
+            else -> throw IllegalArgumentException("Categoría de equipo inválida: ${equipo.categoria}")
+        }
+
+        val cuartosEquipo = mutableListOf<CuartosEquipoDTO>()
+        val cuartosRival = mutableListOf<CuartosRivalDTO>()
+
+        for (numero in 1..numeroDeCuartos) {
+            val cuartoEquipo = CuartosEquipoDAO.new {
+                this.idPartido = EntityID(partido.id.value, Partidos)
+                this.numero = numero
+            }
+            cuartosEquipo.add(cuartoEquipo.toDTO())
+
+            val cuartoRival = CuartosRivalDAO.new {
+                this.idPartido = EntityID(partido.id.value, Partidos)
+                this.numero = numero
+            }
+            cuartosRival.add(cuartoRival.toDTO())
+        }
+
+        return@transaction partido.toDTO().copy(
+            cuartosEquipo = cuartosEquipo,
+            cuartosRival = cuartosRival
+        )
+    }
+
+
     fun updatePartido(id: Int, resultadoNumerico: String, resultado: String, jugadoresDestacados: String): PartidosDAO? = transaction {
         val partido = PartidosDAO.findById(id) ?: return@transaction null
 
