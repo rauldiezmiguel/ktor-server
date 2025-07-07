@@ -21,7 +21,12 @@ fun Application.cuartosEquipoRoutes() {
                         ?: return@get call.respond(HttpStatusCode.BadRequest, "ID del partido inválido")
 
                     val cuartos = cuartosEquipoService.getCuartosByPartido(idPartido)
-                    call.respond(cuartos.map { it.toDTO() })
+
+                    if (cuartos.isEmpty()) {
+                        call.respond(HttpStatusCode.NotFound, "No se encontraron cuartos para el partido $idPartido")
+                    } else {
+                        call.respond(cuartos.map { it.toDTO() })
+                    }
                 }
 
                 post {
