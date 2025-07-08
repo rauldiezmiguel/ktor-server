@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class AlineacionEquipoCuartoService {
     fun getAlineacionByCuarto(idCuarto: Int): List<AlineacionEquipoCuartoDAO> = transaction {
-        AlineacionEquipoCuartoDAO.find { AlineacionEquipoCuarto.idCuarto eq idCuarto }.toList()
+        AlineacionEquipoCuartoDAO.find { AlineacionEquipoCuarto.idCuarto eq EntityID(idCuarto, CuartosEquipo) }.toList()
     }
 
     fun addPlayerAlineacionJugador(

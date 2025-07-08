@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class CuartosEquipoService {
 
     fun getCuartosByPartido(idPartido: Int): List<CuartosEquipoDAO> = transaction {
-        CuartosEquipoDAO.find { CuartosEquipo.idPartido eq idPartido }.toList()
+        CuartosEquipoDAO.find { CuartosEquipo.idPartido eq EntityID(idPartido, Partidos) }.toList()
     }
 
     fun createCuarto(idPartido: Int, numero: Int): CuartosEquipoDAO = transaction {

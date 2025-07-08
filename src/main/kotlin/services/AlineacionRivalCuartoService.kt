@@ -3,6 +3,7 @@ package services
 import model.AlineacionEquipoCuartoDAO
 import model.AlineacionRivalCuarto
 import model.AlineacionRivalCuartoDAO
+import model.CuartosEquipo
 import model.CuartosRival
 import model.Jugadores
 import org.jetbrains.exposed.dao.id.EntityID
@@ -10,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class AlineacionRivalCuartoService {
     fun getAlineacionRivalByCuarto(idCuarto: Int): List<AlineacionRivalCuartoDAO> = transaction {
-        AlineacionRivalCuartoDAO.find { AlineacionRivalCuarto.idCuarto eq idCuarto }.toList()
+        AlineacionRivalCuartoDAO.find { AlineacionRivalCuarto.idCuarto eq EntityID(idCuarto, CuartosEquipo) }.toList()
     }
 
     fun createAlineacionRival(
