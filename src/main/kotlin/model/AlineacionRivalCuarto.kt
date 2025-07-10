@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.ReferenceOption
 
 object AlineacionRivalCuarto : IntIdTable("alineacion_rival_cuarto") {
     val idCuarto = reference("id_cuarto", CuartosRival, onDelete = ReferenceOption.CASCADE)
-    val dorsalJugador = integer("dorsal_jugador")
+    val dorsalJugador = integer("dorsal_jugador").nullable()
     val posX = float("pos_x").nullable()
     val posY = float("pos_y").nullable()
 }
@@ -26,7 +26,7 @@ class AlineacionRivalCuartoDAO(id: EntityID<Int>) : IntEntity(id) {
         return AlineacionRivalDTO(
             id = this.id.value,
             idCuarto = this.idCuarto.value,
-            dorsalJugador = this.dorsalJugador,
+            dorsalJugador = this.dorsalJugador ?: 0,
             posX = this.posX ?: 0f,
             posY = this.posY ?: 0f
         )
@@ -37,7 +37,7 @@ class AlineacionRivalCuartoDAO(id: EntityID<Int>) : IntEntity(id) {
 data class AlineacionRivalDTO(
     val id: Int,
     val idCuarto: Int,
-    val dorsalJugador: Int,
+    val dorsalJugador: Int?,
     val posX: Float?,
     val posY: Float?
 )
@@ -50,7 +50,7 @@ data class CrearAlineacionRivalRequest(
 @Serializable
 data class AddPlayerAlineacionRivalRequest(
     val idCuarto: Int,
-    val dorsalJugador: Int,
+    val dorsalJugador: Int?,
     val posX: Float?,
     val posY: Float?
 )
