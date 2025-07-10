@@ -20,8 +20,8 @@ fun Application.cuartosRivalRoutes() {
                     val idPartido = call.parameters["idPartido"]?.toIntOrNull()
                         ?: return@get call.respond(HttpStatusCode.BadRequest, "ID del partido inválido")
 
-                    val cuartos = cuartosRivalService.getCuartosByPartido(idPartido)
-                    call.respond(cuartos.map { it.toDTO() })
+                    val cuartos = cuartosRivalService.getCuartosRivalByPartido(idPartido)
+                    call.respond(cuartos)
                 }
 
                 post {

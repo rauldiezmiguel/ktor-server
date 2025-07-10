@@ -1,15 +1,26 @@
 package services
 
+import model.AlineacionEquipoCuarto
+import model.AlineacionEquipoCuartoDAO
 import model.CuartosEquipo
+import model.CuartosEquipoCrearPartidoDTO
 import model.CuartosEquipoDAO
+import model.CuartosEquipoDTO
 import model.Partidos
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class CuartosEquipoService {
 
-    fun getCuartosByPartido(idPartido: Int): List<CuartosEquipoDAO> = transaction {
-        CuartosEquipoDAO.find { CuartosEquipo.idPartido eq EntityID(idPartido, Partidos) }.toList()
+    fun getCuartosByPartido(idPartido: Int): List<CuartosEquipoCrearPartidoDTO> = transaction {
+        CuartosEquipoDAO.find { CuartosEquipo.idPartido eq EntityID(idPartido, Partidos) }
+            .map { cuartoEquipo ->
+                // Obtener alineacion relacionada (suponiendo que tienes relación one-to-one)
+                val alineacion = AlineacionEquipoCuartoDAO.find { AlineacionEquipoCuarto.idCuarto eq cuartoEquipo.id }
+                    .firstOrNull()
+
+                cuartoEquipo.toDTOPartido(alineacion?.id?.value ?: -1)  // Pasa el idAlineacion o -1 si no existe
+            }
     }
 
     fun createCuarto(idPartido: Int, numero: Int): CuartosEquipoDAO = transaction {

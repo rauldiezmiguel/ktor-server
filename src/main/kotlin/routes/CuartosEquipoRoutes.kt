@@ -7,10 +7,12 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.http.*
 import model.*
+import services.AlineacionEquipoCuartoService
 import services.CuartosEquipoService
 
 fun Application.cuartosEquipoRoutes() {
     val cuartosEquipoService = CuartosEquipoService()
+    val alineacionEquipoService = AlineacionEquipoCuartoService()
 
     routing {
         authenticate("auth-jwt") {
@@ -25,7 +27,7 @@ fun Application.cuartosEquipoRoutes() {
                     if (cuartos.isEmpty()) {
                         call.respond(HttpStatusCode.NotFound, "No se encontraron cuartos para el partido $idPartido")
                     } else {
-                        call.respond(cuartos.map { it.toDTO() })
+                        call.respond(cuartos)
                     }
                 }
 
