@@ -35,7 +35,7 @@ fun Application.alineacionEquipoCuartoRoutes() {
                     call.respond(HttpStatusCode.OK, alineacion.toDTO())
                 }
 
-                put("{id}}") {
+                put("/{id}}") {
                     val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "ID inválido")
 
                     val request = call.receive<AddPlayerAlineacionEquipoRequest>()

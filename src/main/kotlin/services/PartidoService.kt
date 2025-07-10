@@ -51,26 +51,26 @@ class PartidoService {
             val cuartoEquipo = CuartosEquipoDAO.new {
                 this.idPartido = partido.id
                 this.numero = numero
-            }.toDTO()
-
-            AlineacionEquipoCuartoDAO.new {
-                this.idCuarto = EntityID(cuartoEquipo.id, CuartosEquipo)
             }
 
-            cuartoEquipo
+            AlineacionEquipoCuartoDAO.new {
+                this.idCuarto = cuartoEquipo.id
+            }
+
+            cuartoEquipo.toDTO()
         }
 
         val cuartosRival = (1..numeroDeCuartos).map { numero ->
             val cuartoRival = CuartosRivalDAO.new {
                 this.idPartido = partido.id
                 this.numero = numero
-            }.toDTO()
-
-            AlineacionRivalCuartoDAO.new {
-                this.idCuarto = EntityID(cuartoRival.id, CuartosRival)
             }
 
-            cuartoRival
+            AlineacionRivalCuartoDAO.new {
+                this.idCuarto = cuartoRival.id
+            }
+
+            cuartoRival.toDTO()
         }
 
         partido.toDTO(

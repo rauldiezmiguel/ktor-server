@@ -17,7 +17,7 @@ fun Application.jugadorRoutes() {
     routing {
         authenticate("auth-jwt") {
             route("/jugadores") {
-                get("{id}") {
+                get("/{id}") {
                     val idJugador = call.parameters["id"]?.toIntOrNull()
                     if (idJugador == null) {
                         call.respond(HttpStatusCode.BadRequest, "ID inválido")
