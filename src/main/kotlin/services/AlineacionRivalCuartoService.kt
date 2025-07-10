@@ -25,14 +25,14 @@ class AlineacionRivalCuartoService {
     fun addPlayerAlineacionRival(
         id: Int,
         dorsalJugador: Int,
-        posX: Float,
-        posY: Float
+        posX: Float?,
+        posY: Float?
     ): AlineacionRivalCuartoDAO? = transaction {
         val alineacion = AlineacionRivalCuartoDAO.findById(id) ?: return@transaction null
 
         alineacion.dorsalJugador = dorsalJugador
-        alineacion.posX = posX
-        alineacion.posY = posY
+        alineacion.posX = posX ?: 0f
+        alineacion.posY = posY ?: 0f
 
         alineacion
     }

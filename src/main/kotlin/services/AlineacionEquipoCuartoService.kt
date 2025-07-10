@@ -16,14 +16,14 @@ class AlineacionEquipoCuartoService {
     fun addPlayerAlineacionJugador(
         id: Int,
         idJugador: Int,
-        posX: Float,
-        posY: Float
+        posX: Float?,
+        posY: Float?
     ): AlineacionEquipoCuartoDAO? = transaction {
         val alineacion = AlineacionEquipoCuartoDAO.findById(id) ?: return@transaction null
 
         alineacion.idJugador = EntityID(idJugador, Jugadores)
-        alineacion.posX = posX
-        alineacion.posY = posY
+        alineacion.posX = posX ?: 0f
+        alineacion.posY = posY ?: 0f
 
         alineacion
     }
