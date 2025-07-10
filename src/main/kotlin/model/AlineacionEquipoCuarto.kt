@@ -10,8 +10,8 @@ import org.jetbrains.exposed.sql.ReferenceOption
 object AlineacionEquipoCuarto : IntIdTable("alineacion_equipo_cuarto") {
     val idCuarto = reference("id_cuarto", CuartosEquipo, onDelete = ReferenceOption.CASCADE)
     val idJugador = reference("id_jugador", Jugadores, onDelete = ReferenceOption.CASCADE)
-    val posX = float("pos_x")
-    val posY = float("pos_y")
+    val posX = float("pos_x").nullable()
+    val posY = float("pos_y").nullable()
 }
 
 class AlineacionEquipoCuartoDAO(id: EntityID<Int>) : IntEntity(id) {
@@ -27,8 +27,8 @@ class AlineacionEquipoCuartoDAO(id: EntityID<Int>) : IntEntity(id) {
             id = this.id.value,
             idCuarto = this.idCuarto.value,
             idJugador = this.idJugador.value,
-            posX = this.posX,
-            posY = this.posY
+            posX = this.posX ?: 0f,
+            posY = this.posY ?: 0f
         )
     }
 }
@@ -38,8 +38,8 @@ data class AlineacionEquipoDTO(
     val id: Int,
     val idCuarto: Int,
     val idJugador: Int,
-    val posX: Float,
-    val posY: Float
+    val posX: Float?,
+    val posY: Float?
 )
 
 @Serializable
@@ -51,6 +51,6 @@ data class CrearAlineacionEquipoRequest(
 data class AddPlayerAlineacionEquipoRequest(
     val idCuarto: Int,
     val idJugador: Int,
-    val posX: Float,
-    val posY: Float
+    val posX: Float?,
+    val posY: Float?
 )
