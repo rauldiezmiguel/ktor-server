@@ -35,8 +35,8 @@ class PartidosDAO(id: EntityID<Int>) : IntEntity(id) {
     var jugadoresDestacados by Partidos.jugadoresDestacados
 
 
-    fun toDTO(cuartosEquipoDTO: List<CuartosEquipoDTO> = emptyList(),
-              cuartosRivalDTO: List<CuartosRivalDTO> = emptyList()): PartidosDTO {
+    fun toDTO(cuartosEquipoDTO: List<CuartosEquipoCrearPartidoDTO> = emptyList(),
+              cuartosRivalDTO: List<CuartosRivalCrearPartidoDTO> = emptyList()): PartidosDTO {
         return PartidosDTO(
             id = this.id.value,
             idEquipo = this.idEquipo.value,
@@ -62,8 +62,8 @@ data class PartidosDTO(
     val resultadoNumerico: String?,
     val resultado: String?,
     val jugadoresDestacados: String?,
-    val cuartosEquipo: List<CuartosEquipoDTO> = emptyList(),
-    val cuartosRival: List<CuartosRivalDTO> = emptyList()
+    val cuartosEquipo: List<CuartosEquipoCrearPartidoDTO> = emptyList(),
+    val cuartosRival: List<CuartosRivalCrearPartidoDTO> = emptyList()
 )
 
 @Serializable

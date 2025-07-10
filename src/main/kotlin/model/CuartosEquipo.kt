@@ -30,8 +30,19 @@ class CuartosEquipoDAO(id: EntityID<Int>) : IntEntity(id) {
     var danoRival by CuartosEquipo.danoRival
     var observaciones by CuartosEquipo.observaciones
 
-    fun toDTO(idAlineacion: Int): CuartosEquipoDTO {
+    fun toDTO(): CuartosEquipoDTO {
         return CuartosEquipoDTO(
+            id = this.id.value,
+            idPartido = this.idPartido.value,
+            numero = this.numero,
+            funcionamiento = this.funcionamiento,
+            danoRival = this.danoRival,
+            observaciones = this.observaciones
+        )
+    }
+
+    fun toDTOPartido(idAlineacion: Int): CuartosEquipoCrearPartidoDTO {
+        return CuartosEquipoCrearPartidoDTO(
             id = this.id.value,
             idPartido = this.idPartido.value,
             numero = this.numero,
@@ -46,6 +57,16 @@ class CuartosEquipoDAO(id: EntityID<Int>) : IntEntity(id) {
 // DTO cuartos_equipo
 @Serializable
 data class CuartosEquipoDTO(
+    val id: Int,
+    val idPartido: Int,
+    val numero: Int,
+    val funcionamiento: String?,
+    val danoRival: String?,
+    val observaciones: String?
+)
+
+@Serializable
+data class CuartosEquipoCrearPartidoDTO(
     val id: Int,
     val idPartido: Int,
     val numero: Int,
