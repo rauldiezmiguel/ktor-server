@@ -29,7 +29,10 @@ fun Application.alineacionRivalCuartoRoutes() {
                     val request = call.receive<CrearAlineacionRivalRequest>()
 
                     val alineacion = service.createAlineacionRival(
-                        request.idCuarto
+                        request.idCuarto,
+                        request.dorsalJugador,
+                        request.posX,
+                        request.posY
                     )
 
                     call.respond(HttpStatusCode.OK, alineacion.toDTO())

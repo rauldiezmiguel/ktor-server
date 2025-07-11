@@ -44,7 +44,10 @@ data class AlineacionRivalDTO(
 
 @Serializable
 data class CrearAlineacionRivalRequest(
-    val idCuarto: Int
+    val idCuarto: Int,
+    val dorsalJugador: Int,
+    val posX: Float?,
+    val posY: Float?,
 )
 
 @Serializable

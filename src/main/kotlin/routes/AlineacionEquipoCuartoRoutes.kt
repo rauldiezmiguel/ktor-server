@@ -29,7 +29,10 @@ fun Application.alineacionEquipoCuartoRoutes() {
                     val request = call.receive<CrearAlineacionEquipoRequest>()
 
                     val alineacion = service.createAlineacionEquipoCuarto(
-                        request.idCuarto
+                        idCuarto = request.idCuarto,
+                        idJugador = request.idJugador,
+                        posX = request.posX,
+                        posY = request.posY
                     )
 
                     call.respond(HttpStatusCode.OK, alineacion.toDTO())

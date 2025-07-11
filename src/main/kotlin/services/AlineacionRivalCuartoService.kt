@@ -18,9 +18,15 @@ class AlineacionRivalCuartoService {
 
     fun createAlineacionRival(
         idCuarto: Int,
+        dorsalJugador: Int,
+        posX: Float?,
+        posY: Float?
     ): AlineacionRivalCuartoDAO = transaction {
         AlineacionRivalCuartoDAO.new {
             this.idCuarto = EntityID(idCuarto, CuartosRival)
+            this.dorsalJugador = dorsalJugador
+            this.posX = posX
+            this.posY = posY
         }
     }
 

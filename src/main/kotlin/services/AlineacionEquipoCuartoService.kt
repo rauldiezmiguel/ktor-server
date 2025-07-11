@@ -8,6 +8,7 @@ import model.Jugadores
 import model.PartidosDAO
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.swing.text.html.parser.Entity
 
 class AlineacionEquipoCuartoService {
     fun getAlineacionByCuarto(idCuarto: Int): List<AlineacionEquipoCuartoDAO> = transaction {
@@ -28,10 +29,16 @@ class AlineacionEquipoCuartoService {
     }
 
     fun createAlineacionEquipoCuarto(
-        idCuarto: Int
+        idCuarto: Int,
+        idJugador: Int,
+        posX: Float?,
+        posY: Float?,
     ): AlineacionEquipoCuartoDAO = transaction {
         AlineacionEquipoCuartoDAO.new {
             this.idCuarto = EntityID(idCuarto, CuartosEquipo)
+            this.idJugador = EntityID(idJugador, Jugadores)
+            this.posX = posX ?: 0f
+            this.posY = posY ?: 0f
         }
     }
 
