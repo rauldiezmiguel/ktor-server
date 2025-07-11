@@ -40,9 +40,8 @@ fun Application.alineacionRivalCuartoRoutes() {
 
                     val request = call.receive<AddPlayerAlineacionRivalRequest>()
 
-                    val alineacionCuartoUpdate = service.addPlayerAlineacionRival(
+                    val alineacionCuartoUpdate = service.actualizarPlayerAlineacionRival(
                         id = id,
-                        dorsalJugador = request.dorsalJugador ?: 0,
                         posX = request.posX,
                         posY = request.posY
                     )

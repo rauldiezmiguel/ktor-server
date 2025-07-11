@@ -1,8 +1,10 @@
 package services
 
 import model.AlineacionEquipoCuartoDAO
+import model.AlineacionEquipoDTO
 import model.AlineacionRivalCuarto
 import model.AlineacionRivalCuartoDAO
+import model.AlineacionRivalDTO
 import model.CuartosEquipo
 import model.CuartosRival
 import model.Jugadores
@@ -22,15 +24,13 @@ class AlineacionRivalCuartoService {
         }
     }
 
-    fun addPlayerAlineacionRival(
+    fun actualizarPlayerAlineacionRival(
         id: Int,
-        dorsalJugador: Int,
         posX: Float?,
         posY: Float?
     ): AlineacionRivalCuartoDAO? = transaction {
         val alineacion = AlineacionRivalCuartoDAO.findById(id) ?: return@transaction null
 
-        alineacion.dorsalJugador = dorsalJugador
         alineacion.posX = posX ?: 0f
         alineacion.posY = posY ?: 0f
 

@@ -2,6 +2,7 @@ package services
 
 import model.AlineacionEquipoCuartoDAO
 import model.AlineacionEquipoCuarto
+import model.AlineacionEquipoDTO
 import model.CuartosEquipo
 import model.Jugadores
 import model.PartidosDAO
@@ -13,15 +14,13 @@ class AlineacionEquipoCuartoService {
         AlineacionEquipoCuartoDAO.find { AlineacionEquipoCuarto.idCuarto eq EntityID(idCuarto, CuartosEquipo) }.toList()
     }
 
-    fun addPlayerAlineacionJugador(
+    fun actualizarPlayerAlineacionJugador(
         id: Int,
-        idJugador: Int,
         posX: Float?,
         posY: Float?
     ): AlineacionEquipoCuartoDAO? = transaction {
         val alineacion = AlineacionEquipoCuartoDAO.findById(id) ?: return@transaction null
 
-        alineacion.idJugador = EntityID(idJugador, Jugadores)
         alineacion.posX = posX ?: 0f
         alineacion.posY = posY ?: 0f
 
