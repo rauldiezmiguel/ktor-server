@@ -73,11 +73,18 @@ class PartidoService {
 
 
 
-    fun updatePartido(id: Int, resultadoNumerico: String, resultado: String, jugadoresDestacados: String): PartidosDAO? = transaction {
+    fun updateResultadoPartido(id: Int, resultadoNumerico: String, resultado: String): PartidosDAO? = transaction {
         val partido = PartidosDAO.findById(id) ?: return@transaction null
 
         partido.resultadoNumerico = resultadoNumerico
         partido.resultado = resultado
+
+        partido
+    }
+
+    fun updateJugadoresDestacadosPartido(id: Int, jugadoresDestacados: String): PartidosDAO? = transaction {
+        val partido = PartidosDAO.findById(id) ?: return@transaction null
+
         partido.jugadoresDestacados = jugadoresDestacados
 
         partido

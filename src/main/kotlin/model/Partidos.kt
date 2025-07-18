@@ -74,8 +74,12 @@ data class CrearPartidoRequest(
 )
 
 @Serializable
-data class ActualizarPartidoRequest(
+data class ActualizarResultadoPartidoRequest(
     val resultadoNumerico: String,
-    val resultado: String,
+    val resultado: String
+)
+
+@Serializable
+data class ActualizarJugadoresDestacadosRequest(
     val jugadoresDestacados: String
 )

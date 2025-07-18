@@ -6,8 +6,9 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import model.ActualizarJugadoresDestacadosRequest
 import services.PartidoService
-import model.ActualizarPartidoRequest
+import model.ActualizarResultadoPartidoRequest
 import model.CrearPartidoRequest
 import model.PartidosDAO
 
@@ -41,15 +42,31 @@ fun Application.partidoRoutes() {
                     call.respond(HttpStatusCode.OK, partidoDTO)
                 }
 
-                put("/{id}") {
+                put("/resultado/{id}") {
                     val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "ID inválido")
 
-                    val request = call.receive<ActualizarPartidoRequest>()
+                    val request = call.receive< ActualizarResultadoPartidoRequest>()
 
-                    val partidoUpdate = partidoService.updatePartido(
+                    val partidoUpdate = partidoService.updateResultadoPartido(
                         id = id,
                         resultadoNumerico = request.resultadoNumerico,
-                        resultado = request.resultado,
+                        resultado = request.resultado
+                    )
+
+                    if (partidoUpdate != null) {
+                        call.respond(HttpStatusCode.OK, partidoUpdate.toDTO())
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Partido no encontrado")
+                    }
+                }
+
+                put("/jugadores-destacados/{id}") {
+                    val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "ID inválido")
+
+                    val request = call.receive<ActualizarJugadoresDestacadosRequest>()
+
+                    val partidoUpdate = partidoService.updateJugadoresDestacadosPartido(
+                        id = id,
                         jugadoresDestacados = request.jugadoresDestacados
                     )
 
