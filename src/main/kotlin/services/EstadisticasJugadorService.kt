@@ -91,7 +91,7 @@ class EstadisticasJugadorService {
                 "min.jugados", "minutosjugados" -> estadisticaJugador.minutosJugados
                 "tarjetasamarillas" -> estadisticaJugador.tarjetasAmarillas
                 "tarjetasrojas" -> estadisticaJugador.tarjetasRojas
-                "titularidades" -> if (estadisticaJugador.minutosJugados > 0 && estadisticaJugador.titular) 1 else 0
+                "titularidades" -> if (estadisticaJugador.minutosJugados > 0 && estadisticaJugador.titular == true) 1 else 0
                 "partidosjugados" -> if (estadisticaJugador.minutosJugados > 0) 1 else 0
                 else -> return@mapNotNull null
             }

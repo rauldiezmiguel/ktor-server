@@ -14,7 +14,7 @@ object EstadisticasJugador : IntIdTable("estadisticas_jugador") {
     val minutosJugados = integer("minutos_jugados").default(0)
     val goles = integer("goles").default(0)
     val asistencias = integer("asistencias").default(0)
-    val titular = bool("titular").default(false)
+    val titular = bool("titular").default(false).nullable()
     val tarjetasAmarillas = integer("tarjetas_amarillas").default(0)
     val tarjetasRojas = integer("tarjetas_rojas").default(0)
     val partidoJugado =  bool("partido_jugado").default(false)
@@ -63,7 +63,7 @@ data class EstadisticasJugadorDTO(
     val minutosJugados: Int,
     val goles: Int,
     val asistencias: Int,
-    val titular: Boolean,
+    val titular: Boolean?,
     val tarjetasAmarillas: Int,
     val tarjetasRojas: Int,
     val partidoJugado: Boolean
