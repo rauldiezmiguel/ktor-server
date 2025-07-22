@@ -7,7 +7,8 @@ import org.jetbrains.exposed.sql.and
 
 class EquipoService {
     fun getEquiposByClub(idClub: Int): List<EquipoDAO> = transaction {
-        EquipoDAO.find { Equipos.idClub eq idClub }.toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+        EquipoDAO.find { (Equipos.idClub eq idClub) eq (Equipos.idTemporada eq temporadaActivaId) }.toList()
     }
 
     fun getEquipoById(id: Int): EquipoDAO? = transaction {
@@ -39,11 +40,12 @@ class EquipoService {
         true
     }
 
-    fun getEquiposTemporadaActivaByClub(idClub: Int): List<EquipoDAO> = transaction {
-        val temporadaActiva = TemporadaDAO.find { Temporadas.activa eq true }.firstOrNull() ?: return@transaction emptyList()
-
-        EquipoDAO.find {
-            (Equipos.idClub eq idClub) and (Equipos.idTemporada eq temporadaActiva.id)
-        }.toList()
+    private fun getTemporadaActivaId(): Int? = transaction {
+        TemporadaDAO.find { Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id?.value
     }
+
+    private fun requireTemporadaActivaId(): Int = getTemporadaActivaId()
+        ?: error("No hay temporada activa configurada")
 }

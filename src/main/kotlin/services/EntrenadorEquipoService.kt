@@ -7,7 +7,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class EntrenadorEquipoService() {
     fun getAllEntrenadoresEquipo(): List<EntrenadorEquipoDAO> = transaction {
-        EntrenadorEquipoDAO.all().toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+        EntrenadorEquipoDAO.find { EntrenadorEquipo.idTemporada eq temporadaActivaId }.toList()
     }
 
     fun getEntrenadoresByEquipo(idEquipo: Int): List<EntrenadorEquipoDAO> = transaction {
@@ -23,13 +24,16 @@ class EntrenadorEquipoService() {
         // Extraemos los IDs de los equipos de esas relaciones
         val idsEquipos = relaciones.map { it.idEquipo.value }
 
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+
         // Buscar en EquipoDAO los equipos con esos IDs
-        EquipoDAO.find { Equipos.id inList idsEquipos }.toList()
+        EquipoDAO.find { (Equipos.id inList idsEquipos) and (Equipos.idTemporada eq temporadaActivaId) }.toList()
     }
 
     fun getEquiposByClub(idClub: Int): List<EquipoDAO> = transaction {
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
         // Buscar los equipos que pertenecen al club dado
-        EquipoDAO.find { Equipos.id eq idClub }.toList()
+        EquipoDAO.find { (Equipos.id eq idClub) and (Equipos.idTemporada eq temporadaActivaId) }.toList()
     }
 
     fun addEntrenadorToEquipo(idEntrenador: Int, idEquipo: Int, idTemporada: Int): EntrenadorEquipoDAO = transaction {
@@ -45,4 +49,13 @@ class EntrenadorEquipoService() {
 
         relacion?.delete() != null
     }
+
+    private fun getTemporadaActivaId(): Int? = transaction {
+        TemporadaDAO.find { Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id?.value
+    }
+
+    private fun requireTemporadaActivaId(): Int = getTemporadaActivaId()
+        ?: error("No hay temporada activa configurada")
 }

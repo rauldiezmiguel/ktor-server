@@ -7,17 +7,18 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class EstadisticasJugadorService {
-    private val idTemporadas: Int = 1
 
     fun getEstadisticasByJugadorByPartido(idJugador: Int, idPartido: Int): List<EstadisticasJugadorDAO> = transaction {
         EstadisticasJugadorDAO.find { (EstadisticasJugador.idJugador eq idJugador) and (EstadisticasJugador.idPartido eq idPartido) }.toList()
     }
 
     fun createEstadisticasJugador(idJugador: Int, idPartido: Int, minutosJugados: Int, goles: Int, asistencias: Int, titular: Boolean, tarjetasAmarillas: Int, tarjetasRojas: Int, partidoJugado: Boolean): EstadisticasJugadorDAO = transaction {
+        val temporadaId = requireTemporadaActivaId()
+
         EstadisticasJugadorDAO.new {
             this.idJugador = EntityID( idJugador, Jugadores)
             this.idPartido = EntityID( idPartido, Partidos)
-            this.idTemporada = EntityID(idTemporadas, Temporadas)
+            this.idTemporada = EntityID(temporadaId, Temporadas)
             this.minutosJugados = minutosJugados
             this.goles = goles
             this.asistencias = asistencias
@@ -104,4 +105,13 @@ class EstadisticasJugadorService {
             )
         }
     }
+
+    private fun getTemporadaActivaId(): Int? = transaction {
+        TemporadaDAO.find { Temporadas.activa eq true }
+            .maxByOrNull { it.añoInicio }
+            ?.id?.value
+    }
+
+    private fun requireTemporadaActivaId(): Int = getTemporadaActivaId()
+        ?: error("No hay temporada activa configurada")
 }

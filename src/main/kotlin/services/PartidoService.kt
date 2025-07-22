@@ -10,7 +10,8 @@ import org.jetbrains.exposed.sql.and
 class PartidoService {
 
     fun getPartidosByEquipo(idEquipo: Int): List<PartidosDAO> = transaction {
-        PartidosDAO.find { (Partidos.idEquipo eq idEquipo) }.toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+        PartidosDAO.find { (Partidos.idEquipo eq idEquipo) and (Partidos.idTemporada eq temporadaActivaId) }.toList()
     }
 
     fun createPartido(idEquipo: Int, nombreRival: String, fecha: LocalDate): PartidosDAO = transaction {

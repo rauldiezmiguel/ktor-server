@@ -11,12 +11,16 @@ import org.jetbrains.exposed.sql.and
 import java.time.LocalDate
 import java.time.YearMonth
 import kotlinx.datetime.toJavaLocalDate
+import model.Equipos
+import model.JugadorDAO
+import model.PartidosDAO
 import model.TemporadaDAO
 import model.Temporadas
 
 class EvaluacionesService {
     fun getEvaluacionesByJugador(idJugador: Int): List<EvaluacionesDAO> = transaction {
-        EvaluacionesDAO.find { Evaluaciones.idJugador eq idJugador }.toList()
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+        EvaluacionesDAO.find { (Evaluaciones.idJugador eq idJugador) and (Evaluaciones.idTemporada eq temporadaActivaId) }.toList()
     }
 
     fun createEvaluaciones(
