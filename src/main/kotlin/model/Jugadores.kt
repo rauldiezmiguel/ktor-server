@@ -47,6 +47,7 @@ data class JugadorDTO(
     val idTemporada: Int?
 )
 
+@Serializable
 data class ActualizarJugadorDTO(
     val dorsal: Int,
     val posicion: String?,
