@@ -46,3 +46,8 @@ data class JugadorDTO(
     val idEquipo: Int?,
     val idTemporada: Int?
 )
+
+data class ActualizarJugadorDTO(
+    val dorsal: Int,
+    val posicion: String?,
+)

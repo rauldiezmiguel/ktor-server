@@ -7,6 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
+import model.ActualizarJugadorDTO
 import model.JugadorDTO
 import services.ClubService
 import services.JugadorService
@@ -56,14 +57,14 @@ fun Application.jugadorRoutes() {
 
                 put("/{id}"){
                     val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "ID inválido")
-                    val request = call.receive<Map<String, String>>()
+                    val request = call.receive<ActualizarJugadorDTO>()
 
-                    val nombre = request["nombre"] ?: return@put call.respond(HttpStatusCode.BadRequest, "Falta el nombre dle jugador")
-                    val dorsal = request["dorsal"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "Falta el dorsal del jugador")
-                    val posicion = request["posicion"] ?: return@put call.respond(HttpStatusCode.BadRequest, "Falta la posicion del jugador")
-                    val idEquipo = request["idEquipo"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "Falta el ID del equipo")
+                    val dorsal = request.dorsal
+                    val posicion = request.posicion ?: return@put call.respond(HttpStatusCode.BadRequest, "Falta la posicion del jugador")
 
-                    val jugadorUpdate = jugadorService.updateJugador(id, nombre, dorsal, posicion, idEquipo)
+
+
+                    val jugadorUpdate = jugadorService.updateJugador(id, dorsal, posicion)
                     if(jugadorUpdate) {
                         call.respond(HttpStatusCode.OK, "Jugador actualizado")
                     } else {

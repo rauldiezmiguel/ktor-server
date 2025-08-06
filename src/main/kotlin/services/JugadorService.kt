@@ -32,13 +32,11 @@ class JugadorService {
         }
     }
 
-    fun updateJugador(id: Int, nombre: String, dorsal: Int, posicion: String?, idEquipo: Int): Boolean = transaction {
+    fun updateJugador(id: Int, dorsal: Int, posicion: String?): Boolean = transaction {
         val jugador = JugadorDAO.findById(id) ?: return@transaction false
 
-        jugador.nombreJugador = nombre
         jugador.dorsal = dorsal
         jugador.posicion = posicion
-        idEquipo.let { jugador.idEquipo = EntityID(it, Equipos) }
         true
     }
 
