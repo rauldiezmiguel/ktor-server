@@ -83,6 +83,21 @@ class UserService {
         user?.refreshToken = null
     }
 
+    fun changePassword(username: String, currentPassword: String, newPassword: String): Boolean = transaction {
+        val user = UsuarioDAO.find { Usuarios.nombreUsuario eq username }.singleOrNull()
+            ?: return@transaction false
+
+        // Verificar contraseña actual
+        if (!PasswordHasher.verifyPassword(currentPassword, user.passWrd)) {
+            return@transaction false
+        }
+
+        // Hashear y guardar la nueva contraseña
+        val hashedNewPassword = PasswordHasher.hashPassword(newPassword)
+        user.passWrd = hashedNewPassword
+        true
+    }
+
     fun getPerfilUsuario(idUsuario: Int): PerfilUsuarioDTO? = transaction {
         val usuario = UsuarioDAO.findById(idUsuario) ?: return@transaction null
         val temporadaActivaId = getTemporadaActivaId()

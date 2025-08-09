@@ -3,9 +3,11 @@ package routes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.request.*
+import model.ChangePasswordRequest
 import services.UserService
 
 fun Application.userRoutes() {
@@ -80,6 +82,22 @@ fun Application.userRoutes() {
                         call.respond(HttpStatusCode.OK, perfil)
                     } else {
                         call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
+                    }
+                }
+
+                post("/change-password") {
+                    val principal = call.principal<JWTPrincipal>()
+                    val username = principal?.payload?.getClaim("usuario")?.asString()
+                        ?: return@post call.respond(HttpStatusCode.Unauthorized, "Usuario no autenticado")
+
+                    val request = call.receive<ChangePasswordRequest>()
+
+                    val updated = userService.changePassword(username, request.currentPassword, request.newPassword)
+
+                    if (updated) {
+                        call.respond(HttpStatusCode.OK, "Contraseña cambiada con éxito")
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, "Contraseña actual incorrecta o usuario no encontrado")
                     }
                 }
             }

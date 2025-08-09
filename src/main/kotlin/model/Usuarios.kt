@@ -72,3 +72,9 @@ data class PerfilUsuarioDTO(
     val club: ClubPerfilDTO?,
     val equipos: List<EquipoPerfilDTO>
 )
+
+@Serializable
+data class ChangePasswordRequest(
+    val currentPassword: String,
+    val newPassword: String
+)

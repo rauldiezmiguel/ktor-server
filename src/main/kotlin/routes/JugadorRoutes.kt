@@ -59,7 +59,7 @@ fun Application.jugadorRoutes() {
                     val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest, "ID inválido")
                     val request = call.receive<ActualizarJugadorDTO>()
 
-                    val dorsal = request.dorsal
+                    val dorsal = request.dorsal ?: return@put call.respond(HttpStatusCode.BadRequest, "Falta el dorsal del jugador")
                     val posicion = request.posicion ?: return@put call.respond(HttpStatusCode.BadRequest, "Falta la posicion del jugador")
 
 
