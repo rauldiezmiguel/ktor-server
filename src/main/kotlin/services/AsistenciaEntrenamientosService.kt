@@ -40,7 +40,7 @@ class AsistenciaEntrenamientosService {
                 idEntrenamiento  = entrenamientoId,
                 idJugador        = jugador.id.value,
                 nombreJugador = jugador.nombreJugador,
-                asistio          = existing?.asistio ?: false,
+                asistio          = existing?.asistio ?: true,
                 fecha = entrenamiento.fecha.toKotlinLocalDate(),
                 motivoInasistencia = existing?.motivoInasistencia
             )
@@ -105,7 +105,7 @@ class AsistenciaEntrenamientosService {
                 idEntrenamiento  = entDao.id.value,
                 idJugador        = jugador.id.value,
                 nombreJugador = jugador.nombreJugador,
-                asistio          = existing?.asistio ?: false,
+                asistio          = existing?.asistio ?: true,
                 fecha = entDao.fecha.toKotlinLocalDate(),
                 motivoInasistencia = existing?.motivoInasistencia
             )
