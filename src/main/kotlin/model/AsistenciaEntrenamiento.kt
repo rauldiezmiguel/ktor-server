@@ -12,7 +12,7 @@ import kotlinx.datetime.toKotlinLocalDate
 object AsistenciasEntrenamiento : IntIdTable("asistencia_entrenamiento") {
     val entrenamiento = reference("id_entrenamiento", Entrenamientos, onDelete = ReferenceOption.CASCADE)
     val jugador = reference("id_jugador", Jugadores,     onDelete = ReferenceOption.CASCADE)
-    val asistio = bool("asistio").default(false)
+    val asistio = bool("asistio").default(true)
     val motivoInasistencia = text("motivo_inasistencia").nullable()
 
     init {
