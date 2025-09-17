@@ -12,20 +12,22 @@ class ClubService {
         ClubDAO.findById(id)
     }
 
-    fun createClub(nombreClub: String, direccion: String?, telefono: String?): ClubDAO = transaction{
+    fun createClub(nombreClub: String, direccion: String?, telefono: String?, localizacion: String?): ClubDAO = transaction{
         ClubDAO.new {
             this.nombreClub = nombreClub
             this.direccion = direccion
             this.telefono = telefono
+            this.localizacion = localizacion
         }
     }
 
-    fun updateClub(id: Int, nombreClub: String?, direccion: String?, telefono: String?): Boolean = transaction {
+    fun updateClub(id: Int, nombreClub: String?, direccion: String?, telefono: String?, localizacion: String?): Boolean = transaction {
         val clubDAO = ClubDAO.findById(id) ?: return@transaction false
 
         nombreClub?.let { clubDAO.nombreClub = it }
         direccion?.let { clubDAO.direccion = it }
         telefono?.let { clubDAO.telefono = it }
+        localizacion?.let { clubDAO.localizacion = it }
         true
     }
 

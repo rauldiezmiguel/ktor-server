@@ -22,8 +22,9 @@ fun Application.clubRoutes() {
                 )
                 val direccion = request["direccion"]
                 val telefono = request["telefono"]
+                val localizacion = request["localizacion"]
 
-                val club = clubService.createClub(nombreClub, direccion, telefono)
+                val club = clubService.createClub(nombreClub, direccion, telefono, localizacion)
                 call.respond(HttpStatusCode.Created, "Club creado con ID: ${club.id}")
             }
 
@@ -56,8 +57,9 @@ fun Application.clubRoutes() {
                     val nombreClub = request["nombreClub"]
                     val direccion = request["direccion"]
                     val telefono = request["telefono"]
+                    val localizacion = request["localizacion"]
 
-                    val clubUpdate = clubService.updateClub(id, nombreClub, direccion, telefono)
+                    val clubUpdate = clubService.updateClub(id, nombreClub, direccion, telefono, localizacion)
                     if (clubUpdate) {
                         call.respond(HttpStatusCode.OK, "Club actualizado")
                     } else {

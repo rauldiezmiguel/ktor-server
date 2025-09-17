@@ -10,7 +10,7 @@ object Clubes : IntIdTable("clubes") {
     val nombreClub = text("nombre").uniqueIndex()
     val direccion = text("direccion").nullable()
     val telefono = varchar("telefono", 20).nullable()
-
+    val localizacion = text("localizacion").check { it inList listOf("Cataluña", "Castilla y León") }.nullable()
 }
 
 class ClubDAO(id: EntityID<Int>) : IntEntity(id) {
@@ -19,13 +19,15 @@ class ClubDAO(id: EntityID<Int>) : IntEntity(id) {
     var nombreClub by Clubes.nombreClub
     var direccion by Clubes.direccion
     var telefono by Clubes.telefono
+    var localizacion by Clubes.localizacion
 
     fun toDTO(): ClubDTO{
         return ClubDTO(
             id = this.id.value,
             nombreClub = this.nombreClub,
             direccion = this.direccion,
-            telefono = this.telefono
+            telefono = this.telefono,
+            localizacion = this.localizacion
         )
     }
 }
@@ -35,5 +37,6 @@ data class ClubDTO(
     val id: Int,
     val nombreClub: String,
     val direccion: String?,
-    val telefono: String?
+    val telefono: String?,
+    val localizacion: String?
 )
