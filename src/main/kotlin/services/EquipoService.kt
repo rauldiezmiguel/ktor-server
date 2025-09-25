@@ -11,6 +11,10 @@ class EquipoService {
         EquipoDAO.find { (Equipos.idClub eq idClub) eq (Equipos.idTemporada eq temporadaActivaId) }.toList()
     }
 
+    fun getEquiposByClubByTemporada(idClub: Int, idTemporada: Int): List<EquipoDAO> = transaction {
+        EquipoDAO.find { (Equipos.idClub eq idClub) eq (Equipos.idTemporada eq idTemporada) }.toList()
+    }
+
     fun getEquipoById(id: Int): EquipoDAO? = transaction {
         EquipoDAO.findById(id)
     }

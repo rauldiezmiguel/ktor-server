@@ -24,6 +24,21 @@ fun Application.equipoRoutes() {
                     call.respond(equipoService.getEquiposByClub(idClub).map { it.toDTO() })
                 }
 
+                get("/clubes/{idClub}/temporadas/{idTemporada}") {
+                    val idClub = call.parameters["idClub"]?.toIntOrNull()
+                    val idTemporada = call.parameters["idTemporada"]?.toIntOrNull()
+
+                    if (idClub == null) {
+                        call.respond(HttpStatusCode.BadRequest, "ID club invalido")
+                        return@get
+                    }
+                    if (idTemporada == null) {
+                        call.respond(HttpStatusCode.BadRequest, "ID temporada invalido")
+                        return@get
+                    }
+                    call.respond(equipoService.getEquiposByClubByTemporada(idClub, idTemporada).map { it.toDTO() })
+                }
+
                 get("/{id}"){
                     val id = call.parameters["id"]?.toIntOrNull()
                     val equipo = id?.let { equipoService.getEquipoById(it) }

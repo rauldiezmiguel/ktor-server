@@ -59,6 +59,18 @@ fun Application.authRoutes() {
                 }
             }
 
+            post("/logout") {
+                val username = call.principal<JWTPrincipal>()?.payload?.getClaim("usuario")?.asString()
+
+                if (username != null) {
+                    userService.deleteRefreshToken(username)
+
+                    call.respond(HttpStatusCode.OK, "Sesión cerrada correctamente.")
+                } else {
+                    call.respond(HttpStatusCode.Unauthorized, "Usuario no autenticado.")
+                }
+            }
+
             post("/refresh"){
                 val request = call.receive<Map<String, String>>()
                 val refreshToken = request["refresh_token"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing refresh token")
@@ -85,6 +97,7 @@ fun Application.authRoutes() {
 
         authenticate("auth-jwt") {
             route("/auth") {
+                /*
                 post("/logout") {
                     val username = call.principal<JWTPrincipal>()?.payload?.getClaim("usuario")?.asString()
 
@@ -96,6 +109,7 @@ fun Application.authRoutes() {
                         call.respond(HttpStatusCode.Unauthorized, "Usuario no autenticado.")
                     }
                 }
+                 */
             }
         }
 
