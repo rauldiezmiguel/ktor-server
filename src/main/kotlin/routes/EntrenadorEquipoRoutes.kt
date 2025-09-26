@@ -41,6 +41,17 @@ fun Application.entrenadorEquipoRoutes() {
                     call.respond(equipos.map { it.toDTO() })
                 }
 
+                get("/equipo/{idEquipo}") {
+                    val idEquipo = call.parameters["idEquipo"]?.toInt()
+                    if (idEquipo == null) {
+                        call.respond(HttpStatusCode.BadRequest, "ID de equipo inválido")
+                        return@get
+                    }
+
+                    val entrenadores = entrenadorEquipoService.getEntrenadoresByEquipo(idEquipo)
+                    call.respond(entrenadores.map { it.toDTO() })
+                }
+
                 post {
                     val request = call.receive<Map<String, String>>()
                     val idEntrenador = request["idEntrenador"]?.toInt() ?: return@post call.respond(HttpStatusCode.BadRequest, "Falta el ID del entrenador")

@@ -11,10 +11,30 @@ class EntrenadorEquipoService() {
         EntrenadorEquipoDAO.find { EntrenadorEquipo.idTemporada eq temporadaActivaId }.toList()
     }
 
+    /*
     fun getEntrenadoresByEquipo(idEquipo: Int): List<EntrenadorEquipoDAO> = transaction {
         // Buscamos las relaciones donde el club esté asignado
 
         EntrenadorEquipoDAO.find { EntrenadorEquipo.idEquipo eq idEquipo }.toList()
+    }
+
+     */
+
+    fun getEntrenadoresByEquipo(idEquipo: Int): List<UsuarioDAO> = transaction {
+        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
+
+        // Verificamos que el equipo pertenece a la temporada activa
+        val equipo = EquipoDAO.find {
+            (Equipos.id eq idEquipo) and (Equipos.idTemporada eq temporadaActivaId)
+        }.firstOrNull() ?: return@transaction emptyList()
+
+        // Obtenemos las relaciones del equipo
+        val relaciones = EntrenadorEquipoDAO.find { EntrenadorEquipo.idEquipo eq equipo.id }
+
+        val idsEntrenadores = relaciones.map { it.idEntrenador.value }
+
+        // Devolvemos directamente los entrenadores (UsuarioDAO)
+        UsuarioDAO.find { Usuarios.id inList idsEntrenadores }.toList()
     }
 
     fun getEquiposByEntrenador(idEntrenador: Int): List<EquipoDAO> = transaction {
