@@ -19,7 +19,7 @@ fun Application.entrenadorEquipoRoutes() {
                     call.respond(relaciones.map { it.toDTO() })
                 }
 
-                get("/equipo/{idClub}"){
+                get("/equipos/{idClub}"){
                     val idClub = call.parameters["idClub"]?.toInt()
                     if (idClub == null) {
                         call.respond(HttpStatusCode.BadRequest, "ID del club inválido")
@@ -49,6 +49,9 @@ fun Application.entrenadorEquipoRoutes() {
                     }
 
                     val entrenadores = entrenadorEquipoService.getEntrenadoresByEquipo(idEquipo)
+
+                    println("DEBUG entrenadores JSON: " + entrenadores.map { it.toDTO() })
+
                     call.respond(entrenadores.map { it.toDTO() })
                 }
 

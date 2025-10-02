@@ -10,7 +10,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import model.UsuarioAuthResponse
-import model.UsuarioDTO
 import services.UserService
 
 fun Application.authRoutes() {
