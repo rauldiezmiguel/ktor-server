@@ -32,18 +32,7 @@ class UserService {
     }
 
     fun getUserByClub(idClub: Int): List<UsuarioDAO> = transaction {
-        val temporadaActivaId = getTemporadaActivaId() ?: return@transaction emptyList()
-
-        // Filtramos usuarios por club y relaciones entrenador-equipo que tengan equipos en temporada activa
-        UsuarioDAO.all().filter { usuario ->
-            usuario.idClub?.value == idClub &&
-                    EntrenadorEquipoDAO.find {
-                        (EntrenadorEquipo.idEntrenador eq usuario.id.value)
-                    }.any { relacion ->
-                        val equipo = EquipoDAO.findById(relacion.idEquipo.value)
-                        equipo?.idTemporada?.value == temporadaActivaId
-                    }
-        }
+        UsuarioDAO.find { Usuarios.idClub eq idClub }.toList()
     }
 
     fun createUser(nombreUsuario: String, passWrd: String, tipoUsuario: String, idClub: Int?): UsuarioDAO = transaction{
