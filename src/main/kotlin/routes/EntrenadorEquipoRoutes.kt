@@ -6,6 +6,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import model.EntrenadorEquipo.idEntrenador
 import services.EntrenadorEquipoService
 
 fun Application.entrenadorEquipoRoutes() {
@@ -65,10 +66,9 @@ fun Application.entrenadorEquipoRoutes() {
                     call.respond("Usuario asignado a equipo con ID: ${entrenadorEquipo.id.value}")
                 }
 
-                delete {
-                    val request = call.receive<Map<String, String>>()
-                    val idEntrenador = request["idEntrenador"]?.toIntOrNull() ?: return@delete call.respondText("Falta el ID del entrenador")
-                    val idEquipo = request["idEquipo"]?.toIntOrNull() ?: return@delete call.respondText("Falta el ID del equipo")
+                delete("/{idEntrenador}/{idEquipo}") {
+                    val idEntrenador = call.parameters["idEntrenador"]?.toIntOrNull() ?: return@delete call.respondText("Falta el ID del entrenador")
+                    val idEquipo = call.parameters["idEquipo"]?.toIntOrNull() ?: return@delete call.respondText("Falta el ID del equipo")
 
                     val eliminado = entrenadorEquipoService.deleteEntrenadorDeEquipo(idEntrenador, idEquipo)
 
